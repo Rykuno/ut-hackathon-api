@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Question = mongoose.model('Question', {
+let Question = mongoose.model('Question', {
   text: {
     type: String,
     required: true,
@@ -10,6 +10,10 @@ var Question = mongoose.model('Question', {
   completed: {
     type: Boolean,
     default: false
+  },
+  weight: {
+    type: Number,
+    required: true
   },
   completedAt: {
     type: Number,

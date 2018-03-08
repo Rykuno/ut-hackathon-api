@@ -12,7 +12,7 @@ beforeEach(populateQuestions);
 
 describe('POST /questions', () => {
   it('should create a new question', (done) => {
-    var text = 'Test question text';
+    var text = 'Team1 Test Question';
 
     request(app)
       .post('/questions')

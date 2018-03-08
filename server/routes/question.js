@@ -1,9 +1,9 @@
 const express = require('express');
-var {authenticate} = require('../middleware/authenticate');
-var {Question} = require('../models/question');
+const { authenticate } = require('../middleware/authenticate');
+const { Question } = require('../models/question');
 const { mongoose } = require("mongoose");
 const _ = require('lodash');
-const ObjectId = require("mongodb").ObjectID;
+const ObjectID = require("mongodb").ObjectID;
 const router = express.Router();
 
 
