@@ -13,6 +13,31 @@ let Question = mongoose.model('Question', {
   },
   weight: {
     type: Number,
+    required: false,
+    default: 1
+  },
+  answers: {
+    type: Array,
+    required: true
+  },
+  userAnswer: {
+    type: String,
+    default: ""
+  },
+  order: {
+    type: Number,
+    required: true
+  },
+  previousAnswerAttempts: {
+    type: Array,
+    default: []
+  },
+  numberOfAttempts: {
+    type: Number,
+    default: 0
+  },
+  section: {
+    type: Number,
     required: true
   },
   completedAt: {

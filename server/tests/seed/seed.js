@@ -27,17 +27,39 @@ const users = [{
 
 const questions = [{
   _id: new ObjectID(),
-  text: 'Team 1 Test Question',
+  text: 'Mac or PC',
+  answers: ['Mac'],
+  order: 1,
+  section: 1,
   weight: 1,
   _creator: userOneId
 }, {
   _id: new ObjectID(),
-  text: 'Team 2 Test Question',
+  text: 'What color is blue?',
   weight: 1,
-  completed: true,
-  completedAt: 1337,
+  order: 1,
+  answers: ["Blue"],
+  section: 1,
   _creator: userTwoId
-}];
+},{
+  _id: new ObjectID(),
+  text: 'Spaces or Tabs',
+  answers: ['Tabs'],
+  order: 2,
+  section: 1,
+  weight: 1,
+  _creator: userOneId
+},
+{
+  _id: new ObjectID(),
+  text: 'What is 8 + 4?',
+  answers: ['12'],
+  order: 1,
+  section: 2,
+  weight: 1,
+  _creator: userOneId
+}
+];
 
 const populateQuestions = (done) => {
   Question.remove({}).then(() => {

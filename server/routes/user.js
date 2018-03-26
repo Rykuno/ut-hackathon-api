@@ -25,23 +25,29 @@ const router = express.Router();
     });
   
   router.post('/login', (req, res) => {
+    console.log(req.body);
+    
     var body = _.pick(req.body, ['username', 'password']);
   
     User.findByCredentials(body.username, body.password).then((user) => {
       return user.generateAuthToken().then((token) => {
-        res.header('x-auth', token).send(user);
+        res.header('x-auth', token).send({
+          user,
+          token
+        });
       });
     }).catch((e) => {
       res.status(400).send();
     });
   });
   
-  router.delete('/me/logout', authenticate, (req, res) => {
+  router.delete('/logout', authenticate, (req, res) => {
     req.user.removeToken(req.token).then(() => {
-      res.status(200).send();
+      res.status(200).send({message: "success"});
     }, () => {
-      res.status(400).send();
+      res.status(400).send({message: "failure"});
     });
   });
+
 
   module.exports = { router };
