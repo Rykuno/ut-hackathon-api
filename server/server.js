@@ -17,8 +17,11 @@ app.use(bodyParser.json());
 app.use(function (req, res, next) {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-
+  var allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', '10.0.1.1:3001', '10.0.2.1:3001', '10.0.3.1:3001', '10.0.4.1:3001', '10.0.5.1:3001'];
+  var origin = req.headers.origin;
+  if(allowedOrigins.indexOf(origin) > -1){
+       res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
@@ -38,6 +41,9 @@ app.use('/questions', questionsRouter);
 
 const usersRouter = require('./routes/user').router;
 app.use('/users', usersRouter);
+
+const statisticsRouter = require('./routes/statistics').router;
+app.use('/statistics', statisticsRouter);
 
 app.listen(port, () => {
   console.log(`Started up at port ${port}`);

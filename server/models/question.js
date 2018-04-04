@@ -20,6 +20,10 @@ let Question = mongoose.model('Question', {
     type: Array,
     required: true
   },
+  team: {
+    type: Number,
+    required: true
+  },  
   userAnswer: {
     type: String,
     default: ""

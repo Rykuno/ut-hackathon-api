@@ -6,11 +6,6 @@ const _ = require('lodash');
 const ObjectID = require('mongodb').ObjectID;
 const router = express.Router();
 
-router.use((req, res, next) => {
-  console.log('Hitting Quetion Endpoint');
-  next();
-});
-
 router.get('/test', (req, res) => {
   res.send({
     message: 'Working'
@@ -21,7 +16,7 @@ router.post('/', authenticate, (req, res) => {
   var quest = new Question({
     text: req.body.text,
     _creator: req.user._id
-  });
+  }, 'completed team completedAt order section text numberOfAttempts weight');
 
   quest.save().then(
     doc => {
@@ -36,7 +31,7 @@ router.post('/', authenticate, (req, res) => {
 router.get('/', authenticate, (req, res) => {
   Question.find({
     _creator: req.user._id
-  }).then(
+  }, '_id text order section team completedAt numberOfAttempts weight completed').then(
     Questions => {
       res.send({ Questions });
     },
@@ -44,84 +39,6 @@ router.get('/', authenticate, (req, res) => {
       res.status(400).send(e);
     }
   );
-});
-
-router.get('/:id', authenticate, (req, res) => {
-  var id = req.params.id;
-
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).send();
-  }
-
-  Question.findOne({
-    _id: id,
-    _creator: req.user._id
-  })
-    .then(Question => {
-      if (!Question) {
-        return res.status(404).send();
-      }
-
-      res.send({ Question });
-    })
-    .catch(e => {
-      res.status(400).send();
-    });
-});
-
-router.delete('/:id', authenticate, (req, res) => {
-  var id = req.params.id;
-
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).send();
-  }
-
-  Question.findOneAndRemove({
-    _id: id,
-    _creator: req.user._id
-  })
-    .then(Question => {
-      if (!Question) {
-        return res.status(404).send();
-      }
-
-      res.send({ Question });
-    })
-    .catch(e => {
-      res.status(400).send();
-    });
-});
-
-router.patch('/:id', authenticate, (req, res) => {
-  var id = req.params.id;
-  var body = _.pick(req.body, ['text', 'completed']);
-
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).send();
-  }
-
-  if (_.isBoolean(body.completed) && body.completed) {
-    body.completedAt = new Date().getTime();
-  } else {
-    body.completed = false;
-    body.completedAt = null;
-  }
-
-  Question.findOneAndUpdate(
-    { _id: id, _creator: req.user._id },
-    { $set: body },
-    { new: true }
-  )
-    .then(Question => {
-      if (!Question) {
-        return res.status(404).send();
-      }
-
-      res.send({ Question });
-    })
-    .catch(e => {
-      res.status(400).send();
-    });
 });
 
 router.post('/check/:id', authenticate, (req, res) => {
@@ -133,13 +50,25 @@ router.post('/check/:id', authenticate, (req, res) => {
   }
 
   Question.findOne({ _id: id }).then(question => {
-    const { answers } = question;
-    const { answer } = body;
-    if (answers.includes(body.answer)) {
+    const { answers, completed } = question;
+    const { answer, user } = body;
+    console.log(completed);
+
+    if (completed) {
+      res.status(200).send({ message: 'Quesiton already answered.' });
+      return;
+    }
+
+    if (answers.includes(answer.trim().toLowerCase())) {
       Question.findOneAndUpdate(
         { _id: id },
         {
-          $set: { completed: true, completedAt: Date.now(), userAnswer: answer},
+          $set: {
+            completed: true,
+            completedAt: Date.now(),
+            userAnswer: answer,
+            user: user
+          },
           $inc: { numberOfAttempts: 1 }
         },
         { new: true }
@@ -148,7 +77,6 @@ router.post('/check/:id', authenticate, (req, res) => {
           if (!Question) {
             return res.status(404).send();
           }
-
           res.send({ correct: true });
         })
         .catch(e => {
@@ -157,7 +85,10 @@ router.post('/check/:id', authenticate, (req, res) => {
     } else {
       Question.findOneAndUpdate(
         { _id: id },
-        { $inc: { numberOfAttempts: 1 } , $push: {previousAnswerAttempts: answer}},
+        {
+          $inc: { numberOfAttempts: 1 },
+          $push: { previousAnswerAttempts: answer }
+        },
         { new: true }
       )
         .then(Question => {
@@ -165,10 +96,10 @@ router.post('/check/:id', authenticate, (req, res) => {
             return res.status(404).send();
           }
 
-          res.send({corect: false});
+          res.send({ corect: false });
         })
         .catch(e => {
-          res.status(400).send({message: e})
+          res.status(400).send({ message: e });
         });
     }
   });
