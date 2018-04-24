@@ -1,11 +1,11 @@
 {
   "test": {
-    "PORT": 3000,
-    "MONGODB_URI": "mongodb://localhost:27017/Hackathon-test",
+    "PORT": 8080,
+    "MONGODB_URI": "mongodb://localhost:27017/Hackathon-Test",
     "JWT_SECRET": "poijasdf98435jpgfdpoij3"
   },
   "development": {
-    "PORT": 3000,
+    "PORT": 8080,
     "MONGODB_URI": "mongodb://localhost:27017/Hackathon",
     "JWT_SECRET": "pojiaj234oi234oij234oij4"
   }

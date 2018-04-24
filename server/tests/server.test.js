@@ -12,7 +12,7 @@ beforeEach(populateQuestions);
 
 describe('POST /questions', () => {
   it('should create a new question', (done) => {
-    var text = 'Test question text';
+    var text = 'Team1 Test Question';
 
     request(app)
       .post('/questions')
@@ -349,7 +349,7 @@ describe('POST /users/login', () => {
   });
 });
 
-describe('DELETE /users/me/login', () => {
+describe('DELETE /users/login', () => {
   it('should remove auth token on logout', (done) => {
     request(app)
       .delete('/users/me/login')

@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Question = mongoose.model('Question', {
+let Question = mongoose.model('Question', {
   text: {
     type: String,
     required: true,
@@ -10,6 +10,39 @@ var Question = mongoose.model('Question', {
   completed: {
     type: Boolean,
     default: false
+  },
+  weight: {
+    type: Number,
+    required: false,
+    default: 1
+  },
+  answers: {
+    type: Array,
+    required: true
+  },
+  team: {
+    type: Number,
+    required: true
+  },  
+  userAnswer: {
+    type: String,
+    default: ""
+  },
+  order: {
+    type: Number,
+    required: true
+  },
+  previousAnswerAttempts: {
+    type: Array,
+    default: []
+  },
+  numberOfAttempts: {
+    type: Number,
+    default: 0
+  },
+  section: {
+    type: Number,
+    required: true
   },
   completedAt: {
     type: Number,
