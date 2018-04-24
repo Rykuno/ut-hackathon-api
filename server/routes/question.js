@@ -44,6 +44,8 @@ router.get('/', authenticate, (req, res) => {
 router.post('/check/:id', authenticate, (req, res) => {
   var id = req.params.id;
   var body = _.pick(req.body, ['answer']);
+  console.log(body);
+  
 
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
